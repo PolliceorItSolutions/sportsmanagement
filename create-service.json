@@ -1,0 +1,19 @@
+{
+    "cluster": "sportsmanagement-cluster",
+    "serviceName": "sportsmanagement-service",
+    "taskDefinition": "sportsmanagement-task",
+    "desiredCount": 2,
+    "launchType": "FARGATE",
+    "networkConfiguration": {
+        "awsvpcConfiguration": {
+            "subnets": [
+                "subnet-40352527",
+                "subnet-82869bde"
+            ],
+            "securityGroups": [
+                "sg-08f239ee98a24bb99"
+            ],
+            "assignPublicIp": "ENABLED"
+        }
+    }
+}

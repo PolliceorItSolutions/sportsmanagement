@@ -1,0 +1,15 @@
+# Build context optimizations
+# Ignore VCS, IDE, and build outputs
+.git
+.gitignore
+.idea/
+.vscode/
+*.iml
+
+# Maven/Gradle build outputs
+/target/
+/build/
+/out/
+
+# OS files
+.DS_Store

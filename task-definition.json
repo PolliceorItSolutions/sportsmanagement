@@ -1,0 +1,21 @@
+{
+    "family": "sportsmanagement-task",
+    "networkMode": "awsvpc",
+    "requiresCompatibilities": ["FARGATE"],
+    "cpu": "256",
+    "memory": "512",
+    "executionRoleArn": "arn:aws:iam::860756134448:role/ecsTaskExecutionRole",
+    "containerDefinitions": [
+        {
+            "name": "sportsmanagement",
+            "image": "860756134448.dkr.ecr.us-east-1.amazonaws.com/sportsmanagement:latest",
+            "portMappings": [
+                {
+                    "containerPort": 8080,
+                    "protocol": "tcp"
+                }
+            ],
+            "essential": true
+        }
+    ]
+}
