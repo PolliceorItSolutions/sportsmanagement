@@ -1,0 +1,181 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+                      http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.20.xsd">
+
+    <changeSet id="001" author="Avinash">
+        <!-- Users table -->
+        <createTable tableName="users">
+            <column name="id" type="bigint" autoIncrement="true">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="username" type="varchar(255)">
+                <constraints nullable="false" unique="true"/>
+            </column>
+            <column name="email" type="varchar(255)">
+                <constraints nullable="false" unique="true"/>
+            </column>
+            <column name="password" type="varchar(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="created_at" type="timestamp" defaultValueComputed="CURRENT_TIMESTAMP">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+
+        <!-- Teams table -->
+        <createTable tableName="teams">
+            <column name="id" type="bigint" autoIncrement="true">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="name" type="varchar(255)">
+                <constraints nullable="false" unique="true"/>
+            </column>
+            <column name="contact_email" type="varchar(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="captain" type="varchar(255)"/>
+            <column name="vice_captain" type="varchar(255)"/>
+            <column name="president" type="varchar(255)"/>
+            <column name="secretary" type="varchar(255)"/>
+            <column name="treasurer" type="varchar(255)"/>
+            <column name="created_at" type="timestamp" defaultValueComputed="CURRENT_TIMESTAMP">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+
+
+        <!-- Players table -->
+        <createTable tableName="players">
+            <column name="id" type="bigint" autoIncrement="true">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="name" type="varchar(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="email" type="varchar(255)">
+                <constraints unique="true"/>
+            </column>
+            <column name="team_id" type="bigint">
+                <constraints foreignKeyName="fk_player_team" references="teams(id)"/>
+            </column>
+            <column name="created_at" type="timestamp" defaultValueComputed="CURRENT_TIMESTAMP">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+
+        <!-- Grounds table -->
+        <createTable tableName="grounds">
+            <column name="id" type="bigint" autoIncrement="true">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="name" type="varchar(255)">
+                <constraints nullable="false" unique="true"/>
+            </column>
+            <column name="location" type="varchar(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="capacity" type="int"/>
+            <column name="earliest_start" type="time">
+                <constraints nullable="false"/>
+            </column>
+            <column name="latest_end" type="time">
+                <constraints nullable="false"/>
+            </column>
+            <column name="created_at" type="timestamp" defaultValueComputed="CURRENT_TIMESTAMP">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+
+        <!-- Match Formats table -->
+        <createTable tableName="match_formats">
+            <column name="id" type="bigint" autoIncrement="true">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="name" type="varchar(255)">
+                <constraints nullable="false" unique="true"/>
+            </column>
+            <column name="type" type="varchar(50)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="duration_hours" type="int">
+                <constraints nullable="false"/>
+            </column>
+            <column name="created_at" type="timestamp" defaultValueComputed="CURRENT_TIMESTAMP">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+
+
+        <!-- Team Members junction table for many-to-many relationship -->
+        <createTable tableName="team_members">
+            <column name="team_id" type="bigint">
+                <constraints nullable="false" foreignKeyName="fk_team_members_team" references="teams(id)"/>
+            </column>
+            <column name="player_id" type="bigint">
+                <constraints nullable="false" foreignKeyName="fk_team_members_player" references="players(id)"/>
+            </column>
+        </createTable>
+        <addPrimaryKey tableName="team_members" columnNames="team_id, player_id"/>
+    </changeSet>
+
+    <changeSet id="005" author="your-name">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <columnExists tableName="team_members" columnName="member_name"/>
+            </not>
+        </preConditions>
+
+        <!-- Add the missing column -->
+        <addColumn tableName="team_members">
+            <column name="member_name" type="varchar(255)">
+                <constraints nullable="false"/>
+            </column>
+        </addColumn>
+
+
+    </changeSet>
+
+
+    <changeSet id="007" author="your-name">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <tableExists tableName="user_roles"/>
+            </not>
+        </preConditions>
+
+        <createTable tableName="user_roles">
+            <column name="user_id" type="bigint">
+                <constraints nullable="false"
+                             foreignKeyName="fk_user_roles_user"
+                             references="users(id)"/>
+            </column>
+            <column name="role" type="varchar(50)">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+
+        <addPrimaryKey tableName="user_roles"
+                       columnNames="user_id, role"
+                       constraintName="pk_user_roles"/>
+    </changeSet>
+
+    <changeSet id="008" author="your-name">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <columnExists tableName="users" columnName="password_hash"/>
+            </not>
+        </preConditions>
+
+        <addColumn tableName="users">
+            <column name="password_hash" type="varchar(255)">
+                <constraints nullable="false"/>
+            </column>
+        </addColumn>
+    </changeSet>
+
+
+
+</databaseChangeLog>

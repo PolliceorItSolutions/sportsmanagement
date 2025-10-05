@@ -1,0 +1,34 @@
+version: '3.8'
+services:
+  redis:
+    image: 'redis:latest'
+    ports:
+      - '6379'
+  postgres:
+    image: postgres:latest
+    container_name: sports_postgres
+    environment:
+      POSTGRES_DB: sportsdb
+      POSTGRES_USER: sports_user
+      POSTGRES_PASSWORD: Polliceor!234
+      POSTGRES_HOST_AUTH_METHOD: trust
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      - ./init.sql:/docker-entrypoint-initdb.d/init.sql
+
+  app:
+    build: .
+    container_name: sports_app
+    depends_on:
+      - postgres
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/sportsdb
+      SPRING_DATASOURCE_USERNAME: sports_user
+      SPRING_DATASOURCE_PASSWORD: Polliceor!234
+    ports:
+      - "8080:8080"
+
+volumes:
+  postgres_data:
