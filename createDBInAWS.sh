@@ -1,0 +1,12 @@
+ aws rds create-db-instance \
+   --db-instance-identifier sports-db \
+   --db-instance-class db.t3.micro \
+   --engine postgres \
+   --master-username sports_user \
+   --master-user-password "Polliceor!234" \
+   --allocated-storage 20 \
+   --engine-version 17.6 \
+   --port 5432 \
+   --db-name sportsdb \
+   --publicly-accessible \
+   --region us-east-1
