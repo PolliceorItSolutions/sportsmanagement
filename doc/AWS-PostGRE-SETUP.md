@@ -6,11 +6,11 @@
    --master-username sports_user \
    --master-user-password "Polliceor!234" \
    --allocated-storage 20 \
-   --engine-version 15.5 \
+   --engine-version 17.6 \
    --port 5432 \
    --db-name sportsdb \
    --publicly-accessible \
-   --region ap-south-1
+   --region us-east-1
 
 2. **Get the endpoint** (wait a few minutes for the instance to be available):
    aws rds describe-db-instances \
