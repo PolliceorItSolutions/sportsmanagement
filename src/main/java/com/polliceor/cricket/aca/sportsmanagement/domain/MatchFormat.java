@@ -25,7 +25,7 @@ public class MatchFormat {
     private String name;
 
     @Enumerated(EnumType.STRING)
-    @Column(nullable = false)
+    @Column(nullable = false, columnDefinition = "varchar(50)")
     private MatchType type;
 
     @Column(nullable = false)
