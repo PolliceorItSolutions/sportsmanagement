@@ -17,19 +17,8 @@ import org.springframework.test.context.ActiveProfiles;
 import static org.assertj.core.api.Assertions.assertThat;
 
 @SpringBootTest(
-        webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT,
-        properties = {
-                "spring.liquibase.enabled=false",
-                "spring.datasource.url=jdbc:h2:mem:testdb;MODE=PostgreSQL;DB_CLOSE_DELAY=-1;DATABASE_TO_UPPER=false",
-                "spring.datasource.driver-class-name=org.h2.Driver",
-                "spring.datasource.username=sa",
-                "spring.datasource.password=",
-                "spring.jpa.hibernate.ddl-auto=create-drop",
-                "spring.jpa.properties.hibernate.dialect=org.hibernate.dialect.H2Dialect",
-                "server.servlet.context-path=/sportsmanagementservices",
-                "aws.secrets.enabled=false"
-        }
-)
+        webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
+
 @ActiveProfiles("test")
 class RegisterUserIntegrationTest {
 
