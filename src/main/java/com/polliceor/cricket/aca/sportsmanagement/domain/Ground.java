@@ -7,6 +7,9 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 import jakarta.validation.constraints.NotBlank;
+import org.hibernate.annotations.CreationTimestamp;
+
+import java.time.LocalDateTime;
 import java.time.LocalTime;
 
 @Entity
@@ -21,19 +24,32 @@ public class Ground {
     @Column(nullable = false, unique = true)
     private String name;
 
+    @NotBlank
+    @Column(nullable = false)
+    private String location;
+
+    @Column
+    private Integer capacity;
+
     @Column(nullable = false)
     private LocalTime earliestStart;
 
     @Column(nullable = false)
     private LocalTime latestEnd;
 
+    @Column(name = "created_at", nullable = false, updatable = false)
+    @CreationTimestamp
+    private LocalDateTime createdAt;
+
     public Ground() {}
 
-    public Ground(String name, LocalTime earliestStart, LocalTime latestEnd) {
+    public Ground(String name, String location, LocalTime earliestStart, LocalTime latestEnd) {
         this.name = name;
+        this.location = location;
         this.earliestStart = earliestStart;
         this.latestEnd = latestEnd;
     }
+
 
     public Long getId() { return id; }
     public void setId(Long id) { this.id = id; }
@@ -46,4 +62,25 @@ public class Ground {
 
     public LocalTime getLatestEnd() { return latestEnd; }
     public void setLatestEnd(LocalTime latestEnd) { this.latestEnd = latestEnd; }
+
+    public String getLocation() {
+        return location;
+    }
+
+    public void setLocation(String location) {
+        this.location = location;
+    }
+
+    public Integer getCapacity() {
+        return capacity;
+    }
+
+    public void setCapacity(Integer capacity) {
+        this.capacity = capacity;
+    }
+
+    public LocalDateTime getCreatedAt() {
+        return createdAt;
+    }
+
 }

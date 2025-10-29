@@ -1,8 +1,9 @@
 aws ecs create-service \
     --cluster sportsmanagement-cluster \
     --service-name sportsmanagement-service \
-    --task-definition sportsmanagement:1 \
-    --desired-count 2 \
+    --task-definition sportsmanagement-task:18 \
+    --enable-execute-command \
+    --desired-count 1 \
     --launch-type FARGATE \
     --platform-version LATEST \
     --health-check-grace-period-seconds 120 \

@@ -1,0 +1,56 @@
+{
+    "family": "sportsmanagement-task",
+    "networkMode": "awsvpc",
+    "requiresCompatibilities": ["FARGATE"],
+    "cpu": "256",
+    "memory": "512",
+    "executionRoleArn": "arn:aws:iam::860756134448:role/ecsTaskExecutionRole",
+    "taskRoleArn": "arn:aws:iam::860756134448:role/ecsTaskRole",
+    "containerDefinitions": [
+        {
+            "name": "sports_app",
+            "image": "860756134448.dkr.ecr.us-east-1.amazonaws.com/sportsmanagement:prod",
+            "portMappings": [
+                {
+                    "containerPort": 8080,
+                    "protocol": "tcp"
+                }
+            ],
+            "essential": true,
+            "logConfiguration": {
+                "logDriver": "awslogs",
+                "options": {
+                    "awslogs-group": "/ecs/sportsmanagement",
+                    "awslogs-region": "us-east-1",
+                    "awslogs-stream-prefix": "ecs"
+                }
+            },
+            "secrets": [
+                {
+                    "name": "DB_HOST",
+                    "valueFrom": "arn:aws:secretsmanager:us-east-1:860756134448:secret:/sports/db-credentials-jeakW5:endpoint::"
+                },
+                {
+                    "name": "DB_PORT",
+                    "valueFrom": "arn:aws:secretsmanager:us-east-1:860756134448:secret:/sports/db-credentials-jeakW5:port::"
+                },
+                {
+                    "name": "DB_NAME",
+                    "valueFrom": "arn:aws:secretsmanager:us-east-1:860756134448:secret:/sports/db-credentials-jeakW5:dbname::"
+                },
+                {
+                    "name": "DB_USER",
+                    "valueFrom": "arn:aws:secretsmanager:us-east-1:860756134448:secret:/sports/db-credentials-jeakW5:username::"
+                },
+                {
+                    "name": "DB_PASSWORD",
+                    "valueFrom": "arn:aws:secretsmanager:us-east-1:860756134448:secret:/sports/db-credentials-jeakW5:password::"
+                },
+                {
+                    "name": "spring.ai.openai.api-key",
+                    "valueFrom": "arn:aws:secretsmanager:us-east-1:860756134448:secret:/sports/db-credentials-jeakW5:openapikey::"
+                }
+            ]
+        }
+    ]
+}

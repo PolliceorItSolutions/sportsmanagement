@@ -14,6 +14,8 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.test.context.ActiveProfiles;
 
+import java.util.UUID;
+
 import static org.assertj.core.api.Assertions.assertThat;
 
 @SpringBootTest(
@@ -42,8 +44,9 @@ class RegisterUserIntegrationTest {
     @Test
     void registerUser_returns201_andUserResponse() {
         RegisterRequest req = new RegisterRequest();
-        req.setUsername("alice_test");
-        req.setEmail("alice@example.com");
+        String uuid = UUID.randomUUID().toString();
+        req.setUsername("alice_test"+"_"+uuid.substring(0, 4));
+        req.setEmail("alice_" + uuid.substring(0, 4) + "@example.com");
         req.setPassword("StrongPass1!");
 
         ResponseEntity<UserResponse> response = restTemplate.postForEntity(
@@ -53,16 +56,21 @@ class RegisterUserIntegrationTest {
         UserResponse body = response.getBody();
         assertThat(body).isNotNull();
         assertThat(body.getId()).isNotNull();
-        assertThat(body.getUsername()).isEqualTo("alice_test");
-        assertThat(body.getEmail()).isEqualTo("alice@example.com");
+        assertThat(body.getUsername()).isEqualTo("alice_test"+"_"+uuid.substring(0, 4));
+        assertThat(body.getEmail()).isEqualTo("alice_" + uuid.substring(0, 4) + "@example.com");
     }
 
     @Test
     void registeringDuplicateUsernameOrEmail_returns409Conflict() {
         RegisterRequest req = new RegisterRequest();
-        req.setUsername("bob_test");
-        req.setEmail("bob@example.com");
+        String uuid = UUID.randomUUID().toString();
+        String username = "bob_test" + "_" + uuid.substring(0, 4);
+        String email = "bob" + "_" + uuid.substring(0,4) + "@example.com";
+
+        req.setUsername(username);
+        req.setEmail(email);
         req.setPassword("StrongPass1!");
+
 
         // First registration should succeed
         ResponseEntity<UserResponse> first = restTemplate.postForEntity(
@@ -71,8 +79,8 @@ class RegisterUserIntegrationTest {
 
         // Duplicate username
         RegisterRequest dupUser = new RegisterRequest();
-        dupUser.setUsername("bob_test");
-        dupUser.setEmail("another@example.com");
+        dupUser.setUsername(username);  // Use same username as original
+        dupUser.setEmail("another" + UUID.randomUUID().toString() + "@example.com");  // Different email
         dupUser.setPassword("StrongPass1!");
         ResponseEntity<String> dupUserResp = restTemplate.postForEntity(
                 url("/api/auth/register"), json(dupUser), String.class);
@@ -80,11 +88,12 @@ class RegisterUserIntegrationTest {
 
         // Duplicate email
         RegisterRequest dupEmail = new RegisterRequest();
-        dupEmail.setUsername("another_user");
-        dupEmail.setEmail("bob@example.com");
+        dupEmail.setUsername("another_user" + UUID.randomUUID().toString());  // Different username
+        dupEmail.setEmail(email);  // Use same email as original
         dupEmail.setPassword("StrongPass1!");
         ResponseEntity<String> dupEmailResp = restTemplate.postForEntity(
                 url("/api/auth/register"), json(dupEmail), String.class);
         assertThat(dupEmailResp.getStatusCode()).isEqualTo(HttpStatus.CONFLICT);
     }
+
 }

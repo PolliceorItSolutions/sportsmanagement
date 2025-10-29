@@ -5,26 +5,62 @@ import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 
 import java.time.LocalTime;
-
 public class CreateGroundRequest {
 
     @NotBlank
     private String name;
 
+    @NotBlank
+    private String location;
+
+    private Integer capacity;
+
     @NotNull
-    @JsonFormat(pattern = "HH:mm")
+    @JsonFormat(pattern = "HH:mm:ss")
     private LocalTime earliestStart;
 
     @NotNull
-    @JsonFormat(pattern = "HH:mm")
+    @JsonFormat(pattern = "HH:mm:ss")
     private LocalTime latestEnd;
 
-    public String getName() { return name; }
-    public void setName(String name) { this.name = name; }
+    // Getters and Setters
+    public String getName() {
+        return name;
+    }
 
-    public LocalTime getEarliestStart() { return earliestStart; }
-    public void setEarliestStart(LocalTime earliestStart) { this.earliestStart = earliestStart; }
+    public void setName(String name) {
+        this.name = name;
+    }
 
-    public LocalTime getLatestEnd() { return latestEnd; }
-    public void setLatestEnd(LocalTime latestEnd) { this.latestEnd = latestEnd; }
+    public String getLocation() {
+        return location;
+    }
+
+    public void setLocation(String location) {
+        this.location = location;
+    }
+
+    public Integer getCapacity() {
+        return capacity;
+    }
+
+    public void setCapacity(Integer capacity) {
+        this.capacity = capacity;
+    }
+
+    public LocalTime getEarliestStart() {
+        return earliestStart;
+    }
+
+    public void setEarliestStart(LocalTime earliestStart) {
+        this.earliestStart = earliestStart;
+    }
+
+    public LocalTime getLatestEnd() {
+        return latestEnd;
+    }
+
+    public void setLatestEnd(LocalTime latestEnd) {
+        this.latestEnd = latestEnd;
+    }
 }

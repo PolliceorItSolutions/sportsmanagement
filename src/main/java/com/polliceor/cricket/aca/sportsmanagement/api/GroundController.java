@@ -29,8 +29,11 @@ public class GroundController {
         }
         Ground ground = new Ground();
         ground.setName(req.getName());
+        ground.setLocation(req.getLocation());     // Add this line
+        ground.setCapacity(req.getCapacity());     // Add this line
         ground.setEarliestStart(req.getEarliestStart());
         ground.setLatestEnd(req.getLatestEnd());
         return groundRepository.save(ground);
+
     }
 }
