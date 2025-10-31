@@ -4,6 +4,8 @@ import com.polliceor.cricket.aca.sportsmanagement.api.dto.CreateGroundRequest;
 import com.polliceor.cricket.aca.sportsmanagement.domain.Ground;
 import com.polliceor.cricket.aca.sportsmanagement.repo.GroundRepository;
 import jakarta.validation.Valid;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
@@ -11,6 +13,8 @@ import org.springframework.web.server.ResponseStatusException;
 @RestController
 @RequestMapping("/api/grounds")
 public class GroundController {
+
+    Logger log = LoggerFactory.getLogger(GroundController.class);
 
     private final GroundRepository groundRepository;
 
