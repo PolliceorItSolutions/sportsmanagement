@@ -5,27 +5,33 @@
         xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
                       http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.20.xsd">
 
-    <changeSet id="001" author="Avinash">
-        <!-- Users table -->
+    <!-- ============================
+         USERS TABLE
+         Firebase UID + first/last name
+         ============================ -->
+    <changeSet id="001-create-users" author="Avinash">
         <createTable tableName="users">
             <column name="id" type="bigint" autoIncrement="true">
                 <constraints primaryKey="true" nullable="false"/>
             </column>
-            <column name="username" type="varchar(255)">
+            <column name="firebase_uid" type="varchar(128)">
                 <constraints nullable="false" unique="true"/>
             </column>
             <column name="email" type="varchar(255)">
                 <constraints nullable="false" unique="true"/>
             </column>
-            <column name="password" type="varchar(255)">
-                <constraints nullable="false"/>
-            </column>
+            <column name="first_name" type="varchar(50)"/>
+            <column name="last_name" type="varchar(50)"/>
             <column name="created_at" type="timestamp" defaultValueComputed="CURRENT_TIMESTAMP">
                 <constraints nullable="false"/>
             </column>
         </createTable>
+    </changeSet>
 
-        <!-- Teams table -->
+    <!-- ============================
+         TEAMS TABLE
+         ============================ -->
+    <changeSet id="002-create-teams" author="Avinash">
         <createTable tableName="teams">
             <column name="id" type="bigint" autoIncrement="true">
                 <constraints primaryKey="true" nullable="false"/>
@@ -45,9 +51,12 @@
                 <constraints nullable="false"/>
             </column>
         </createTable>
+    </changeSet>
 
-
-        <!-- Players table -->
+    <!-- ============================
+         PLAYERS TABLE
+         ============================ -->
+    <changeSet id="003-create-players" author="Avinash">
         <createTable tableName="players">
             <column name="id" type="bigint" autoIncrement="true">
                 <constraints primaryKey="true" nullable="false"/>
@@ -65,8 +74,12 @@
                 <constraints nullable="false"/>
             </column>
         </createTable>
+    </changeSet>
 
-        <!-- Grounds table -->
+    <!-- ============================
+         GROUNDS TABLE
+         ============================ -->
+    <changeSet id="004-create-grounds" author="Avinash">
         <createTable tableName="grounds">
             <column name="id" type="bigint" autoIncrement="true">
                 <constraints primaryKey="true" nullable="false"/>
@@ -88,8 +101,12 @@
                 <constraints nullable="false"/>
             </column>
         </createTable>
+    </changeSet>
 
-        <!-- Match Formats table -->
+    <!-- ============================
+         MATCH FORMATS TABLE
+         ============================ -->
+    <changeSet id="005-create-match-formats" author="Avinash">
         <createTable tableName="match_formats">
             <column name="id" type="bigint" autoIncrement="true">
                 <constraints primaryKey="true" nullable="false"/>
@@ -107,9 +124,12 @@
                 <constraints nullable="false"/>
             </column>
         </createTable>
+    </changeSet>
 
-
-        <!-- Team Members junction table for many-to-many relationship -->
+    <!-- ============================
+         TEAM MEMBERS TABLE (Many-to-Many)
+         ============================ -->
+    <changeSet id="006-create-team-members" author="Avinash">
         <createTable tableName="team_members">
             <column name="team_id" type="bigint">
                 <constraints nullable="false" foreignKeyName="fk_team_members_team" references="teams(id)"/>
@@ -117,35 +137,17 @@
             <column name="player_id" type="bigint">
                 <constraints nullable="false" foreignKeyName="fk_team_members_player" references="players(id)"/>
             </column>
+            <column name="member_name" type="varchar(255)">
+                <constraints nullable="false"/>
+            </column>
         </createTable>
         <addPrimaryKey tableName="team_members" columnNames="team_id, player_id"/>
     </changeSet>
 
-    <changeSet id="005" author="your-name">
-        <preConditions onFail="MARK_RAN">
-            <not>
-                <columnExists tableName="team_members" columnName="member_name"/>
-            </not>
-        </preConditions>
-
-        <!-- Add the missing column -->
-        <addColumn tableName="team_members">
-            <column name="member_name" type="varchar(255)">
-                <constraints nullable="false"/>
-            </column>
-        </addColumn>
-
-
-    </changeSet>
-
-
-    <changeSet id="007" author="your-name">
-        <preConditions onFail="MARK_RAN">
-            <not>
-                <tableExists tableName="user_roles"/>
-            </not>
-        </preConditions>
-
+    <!-- ============================
+         USER ROLES TABLE
+         ============================ -->
+    <changeSet id="007-create-user-roles" author="Avinash">
         <createTable tableName="user_roles">
             <column name="user_id" type="bigint">
                 <constraints nullable="false"
@@ -157,25 +159,7 @@
             </column>
         </createTable>
 
-        <addPrimaryKey tableName="user_roles"
-                       columnNames="user_id, role"
-                       constraintName="pk_user_roles"/>
+        <addPrimaryKey tableName="user_roles" columnNames="user_id, role" constraintName="pk_user_roles"/>
     </changeSet>
-
-    <changeSet id="008" author="your-name">
-        <preConditions onFail="MARK_RAN">
-            <not>
-                <columnExists tableName="users" columnName="password_hash"/>
-            </not>
-        </preConditions>
-
-        <addColumn tableName="users">
-            <column name="password_hash" type="varchar(255)">
-                <constraints nullable="false"/>
-            </column>
-        </addColumn>
-    </changeSet>
-
-
 
 </databaseChangeLog>

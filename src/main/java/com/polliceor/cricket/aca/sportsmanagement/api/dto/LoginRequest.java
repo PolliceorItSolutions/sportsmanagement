@@ -1,17 +1,21 @@
 package com.polliceor.cricket.aca.sportsmanagement.api.dto;
 
+
 import jakarta.validation.constraints.NotBlank;
 
 public class LoginRequest {
-    @NotBlank
-    private String username;
 
     @NotBlank
-    private String password;
+    private String idToken;
 
-    public String getUsername() { return username; }
-    public void setUsername(String username) { this.username = username; }
+    public String getIdToken() {
+        return idToken;
+    }
 
-    public String getPassword() { return password; }
-    public void setPassword(String password) { this.password = password; }
+    public void setIdToken(String idToken) {
+        this.idToken = idToken;
+    }
+
+
+
 }

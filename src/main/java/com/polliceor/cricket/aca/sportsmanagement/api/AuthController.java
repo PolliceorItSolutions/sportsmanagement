@@ -1,5 +1,6 @@
 package com.polliceor.cricket.aca.sportsmanagement.api;
 
+import com.google.firebase.auth.FirebaseAuthException;
 import com.polliceor.cricket.aca.sportsmanagement.api.dto.*;
 import com.polliceor.cricket.aca.sportsmanagement.domain.User;
 import com.polliceor.cricket.aca.sportsmanagement.service.UserService;
@@ -17,15 +18,29 @@ public class AuthController {
         this.userService = userService;
     }
 
+    // Register is optional in Firebase-based systems.
+    // Keep it to store extra profile data like firstName/lastName
     @PostMapping("/register")
     @ResponseStatus(HttpStatus.CREATED)
-    public UserResponse register(@RequestBody @Valid RegisterRequest request) {
-        User user = userService.register(request);
-        return new UserResponse(user.getId(), user.getUsername(), user.getEmail());
+    public UserResponse register(@RequestBody @Valid RegisterRequest request,
+                                 @RequestHeader(value = "Authorization", required = false) String authorizationHeader
+    ) throws FirebaseAuthException {
+        String idToken = null;
+        if (authorizationHeader != null && authorizationHeader.startsWith("Bearer ")) {
+            idToken = authorizationHeader.substring(7);
+        }
+        User user = userService.register(request, idToken);
+        return new UserResponse(
+                user.getId(),
+                user.getEmail(),
+                user.getFirstName(),
+                user.getLastName()
+        );
     }
 
+    // Login using Firebase ID token
     @PostMapping("/login")
     public AuthResponse login(@RequestBody @Valid LoginRequest request) {
-        return userService.authenticate(request.getUsername(), request.getPassword());
+        return userService.authenticateWithFirebase(request.getIdToken());
     }
 }

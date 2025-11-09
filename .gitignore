@@ -36,3 +36,8 @@ out/
 
 ### VS Code ###
 .vscode/
+.env
+/src/main/resources/firebase-service-account.json
+/src/test/resources/firebase-service-account.json
+/src/test/resources/googleAuthenticator.html
+/.flattened-pom.xml

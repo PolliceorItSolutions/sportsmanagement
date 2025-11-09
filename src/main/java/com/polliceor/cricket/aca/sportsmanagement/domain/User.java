@@ -9,8 +9,8 @@ import java.util.Set;
 
 @Entity
 @Table(name = "users", uniqueConstraints = {
-        @UniqueConstraint(columnNames = {"username"}),
-        @UniqueConstraint(columnNames = {"email"})
+        @UniqueConstraint(columnNames = {"email"}),
+        @UniqueConstraint(columnNames = {"firebase_uid"})
 })
 public class User {
 
@@ -18,23 +18,30 @@ public class User {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @NotBlank
-    @Size(min = 3, max = 50)
-    private String username;
+    // Firebase UID uniquely identifies the user in Firebase
+    @Column(name = "firebase_uid", nullable = false, unique = true)
+    private String firebaseUid;
 
     @Email
     @NotBlank
+    @Column(nullable = false, unique = true)
     private String email;
 
-    @NotBlank
-    @Size(min = 8, max = 200)
-    private String passwordHash;
+    @Size(max = 50)
+    private String firstName;
+
+    @Size(max = 50)
+    private String lastName;
+
+    // If you still want to keep a username for display, you can make it optional
+    private String username;
 
     @ElementCollection(fetch = FetchType.EAGER)
     @CollectionTable(name = "user_roles", joinColumns = @JoinColumn(name = "user_id"))
     @Column(name = "role")
     private Set<String> roles;
 
+    // --- Getters and Setters ---
     public Long getId() {
         return id;
     }
@@ -43,12 +50,12 @@ public class User {
         this.id = id;
     }
 
-    public String getUsername() {
-        return username;
+    public String getFirebaseUid() {
+        return firebaseUid;
     }
 
-    public void setUsername(String username) {
-        this.username = username;
+    public void setFirebaseUid(String firebaseUid) {
+        this.firebaseUid = firebaseUid;
     }
 
     public String getEmail() {
@@ -59,12 +66,28 @@ public class User {
         this.email = email;
     }
 
-    public String getPasswordHash() {
-        return passwordHash;
+    public String getFirstName() {
+        return firstName;
     }
 
-    public void setPasswordHash(String passwordHash) {
-        this.passwordHash = passwordHash;
+    public void setFirstName(String firstName) {
+        this.firstName = firstName;
+    }
+
+    public String getLastName() {
+        return lastName;
+    }
+
+    public void setLastName(String lastName) {
+        this.lastName = lastName;
+    }
+
+    public String getUsername() {
+        return username != null ? username : firstName + " " + lastName;
+    }
+
+    public void setUsername(String username) {
+        this.username = username;
     }
 
     public Set<String> getRoles() {
